@@ -1,0 +1,7 @@
+<ul class="errors">
+  <% if (locals.errors) { %>
+    <% errors.forEach(error => { %>
+      <li><%=error.msg %></li>
+    <% }); %>
+  <% } %>
+</ul>
