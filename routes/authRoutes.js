@@ -10,3 +10,5 @@ router.post('/log-in', passport.authenticate('local', {
   failureRedirect: '/auth/log-in',
   failureMessage: true
 }));
+router.get('/sign-up', controller.signUp);
+router.post('/sign-up', controller.registerUser);

@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import prisma from '../db/prisma';
 import {body, validationResult} from 'express-validator';
+import db from "../db/authQueries";
 
 const alphaErr = 'must contain only letters.';
 
@@ -22,11 +22,7 @@ const validateRegister = [
     .trim()
     .notEmpty().withMessage('Username is required')
     .custom(async (value) => {
-      const user = await prisma.user.findUnique({
-        where: {
-          username: value
-        },
-      });
+      const user = await db.findByUsername(value);
       if (user) {
         throw new Error('Username is already in use.');
       }
@@ -44,7 +40,7 @@ const validateRegister = [
     }),
 ];
 
-function login(req, res, next) {
+const login = (req, res, next) => {
   const errorMessage = {msg: req.session.messages?.[0]};
   req.session.messages = [];
   if (errorMessage.msg) {
@@ -60,8 +56,34 @@ function login(req, res, next) {
   } catch(err) {
     next(err);
   }
-}
+};
 
-const controller = {login, }
+const signUp = (req, res) => {
+  res.render('signup', {
+    title: 'Sign up',
+  });
+};
+
+const registerUser = [
+  validateRegister,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render('signup', {
+        errors: errors.array(),
+        title: 'Sign up'
+      });
+    }
+    try {
+      const {first_name, last_name, email, username, password} = req.body;
+      const hashedPassword = bcrypt.hash(password, 10);
+      await db.createUser(first_name, last_name, email, username, hashedPassword);
+    } catch (err) {
+      next(err);
+    }
+  }
+];
+
+const controller = {login, signUp, registerUser};
 
 export default controller;
