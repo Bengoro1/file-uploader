@@ -84,6 +84,13 @@ const registerUser = [
   }
 ];
 
-const controller = {login, signUp, registerUser};
+const logOut = (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    res.redirect('/auth/log-in');
+  });
+};
+
+const controller = {login, signUp, registerUser, logOut};
 
 export default controller;
