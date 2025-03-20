@@ -1,6 +1,6 @@
 import {Strategy as LocalStrategy} from'passport-local';
 import * as bcrypt from 'bcryptjs';
-import prisma from '../db/prisma';
+import prisma from '../db/prisma.js';
 
 export default function passportConfig(passport) {
   passport.use(

@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import {body, validationResult} from 'express-validator';
-import db from "../db/authQueries";
+import db from "../db/authQueries.js";
 
 const alphaErr = 'must contain only letters.';
 

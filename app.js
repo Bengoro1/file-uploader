@@ -1,15 +1,16 @@
 import express from 'express';
 import path from 'node:path';
 import passport from 'passport';
-import passportConfig from './config/passportConfig';
+import passportConfig from './config/passportConfig.js';
 import expressSession from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import prisma from './db/prisma';
+import prisma from './db/prisma.js';
 import 'dotenv/config';
-import authRouter from './routes/authRoutes';
+import authRouter from './routes/authRoutes.js';
 
 const app = express();
 
+const __dirname = import.meta.dirname;
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
