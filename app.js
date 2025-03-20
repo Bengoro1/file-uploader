@@ -6,6 +6,7 @@ import expressSession from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import prisma from './db/prisma';
 import 'dotenv/config';
+import authRouter from './routes/authRoutes';
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use(
 app.use(passport.session());
 
 passportConfig(passport);
+
+app.use('/auth', authRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
