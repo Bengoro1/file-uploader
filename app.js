@@ -7,6 +7,7 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import prisma from './db/prisma.js';
 import 'dotenv/config';
 import authRouter from './routes/authRoutes.js';
+import uploadRouter from './routes/uploadRoutes.js';
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(passport.session());
 passportConfig(passport);
 
 app.use('/auth', authRouter);
+app.use(uploadRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
