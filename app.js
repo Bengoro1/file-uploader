@@ -41,6 +41,11 @@ passportConfig(passport);
 
 app.use('/auth', authRouter);
 app.use(uploadRouter);
+app.get('/', (req, res) => {
+  res.render('home', {
+    title: 'Home'
+  });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));

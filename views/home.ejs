@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="file" required>
+      <button type="submit">Submit</button>
+    </form>
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>
