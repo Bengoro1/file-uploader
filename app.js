@@ -8,6 +8,7 @@ import prisma from './db/prisma.js';
 import 'dotenv/config';
 import authRouter from './routes/authRoutes.js';
 import uploadRouter from './routes/uploadRoutes.js';
+import { isAuthenticated } from './middlewares/authMiddleware.js';
 
 const app = express();
 
@@ -39,9 +40,9 @@ app.use(passport.session());
 
 passportConfig(passport);
 
-app.use('/auth', authRouter);
+app.use('/auth', isAuthenticated, authRouter);
 app.use(uploadRouter);
-app.get('/', (req, res) => {
+app.get('/', isAuthenticated, (req, res) => {
   res.render('home', {
     title: 'Home'
   });
