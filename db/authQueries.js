@@ -13,7 +13,7 @@ const createUser = async (firstName, lastName, email, username, hashedPassword) 
     data: {
       first_name: firstName,
       last_name: lastName,
-      email: email,
+      ...(email ? {email: email} : {}),
       username: username,
       password: hashedPassword
     },
