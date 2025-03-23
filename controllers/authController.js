@@ -76,7 +76,7 @@ const registerUser = [
     }
     try {
       const {first_name, last_name, email, username, password} = req.body;
-      const hashedPassword = bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       await db.createUser(first_name, last_name, email, username, hashedPassword);
     } catch (err) {
       next(err);
