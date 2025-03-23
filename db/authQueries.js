@@ -1,12 +1,6 @@
 import prisma from './prisma.js';
 
-const findByUsername = async (username) => {
-  await prisma.user.findUnique({
-    where: {
-      username: username
-    },
-  });
-};
+const findByUsername = async (username) => await prisma.user.findUnique({where: {username}});
 
 const createUser = async (firstName, lastName, email, username, hashedPassword) => {
   await prisma.user.create({
