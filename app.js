@@ -40,7 +40,7 @@ app.use(passport.session());
 
 passportConfig(passport);
 
-app.use('/auth', isAuthenticated, authRouter);
+app.use('/auth', authRouter);
 app.use(uploadRouter);
 app.get('/', isAuthenticated, (req, res) => {
   res.render('home', {
