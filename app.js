@@ -40,11 +40,20 @@ app.use(passport.session());
 
 passportConfig(passport);
 
+app.use((req, res, next) => {
+  if (req.session.message) {
+    res.locals.message = req.session.message;
+    delete req.session.message;
+  }
+  next();
+});
 app.use('/auth', authRouter);
 app.use(uploadRouter);
+
 app.get('/', isAuthenticated, (req, res) => {
   res.render('home', {
-    title: 'Home'
+    title: 'Home',
+    message: res.locals.message || ''
   });
 });
 

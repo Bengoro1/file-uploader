@@ -12,6 +12,6 @@ router.post('/log-in', passport.authenticate('local', {
 }));
 router.get('/sign-up', controller.signUp);
 router.post('/sign-up', controller.registerUser);
-router.get('/logout', controller.logOut);
+router.get('/log-out', controller.logOut);
 
 export default router;

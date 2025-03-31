@@ -1,6 +1,11 @@
 export const uploadFile = (req, res) => {
   if (!req.file) {
-    return res.status(400).send('No file uploaded!');
+    req.session.message = 'No file uploaded!';
+  } else {
+    req.session.message = `File uploaded: ${req.file.filename}`;
   }
-  res.send(`File uploaded: ${req.file.filename}`);
+  
+  req.session.save(() => {
+    res.redirect('/');
+  });
 }

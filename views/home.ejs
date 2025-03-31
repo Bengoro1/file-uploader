@@ -4,6 +4,9 @@
 <body>
   <div class="container">
     <%- include('partials/header') %>
+    <% if (locals.message) { %>
+      <p><%= message %></p>
+    <% } %>
     <form action="/upload" method="post" enctype="multipart/form-data">
       <input type="file" name="file" id="file" required>
       <button type="submit">Submit</button>
