@@ -9,6 +9,7 @@ import 'dotenv/config';
 import authRouter from './routes/authRoutes.js';
 import uploadRouter from './routes/uploadRoutes.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
+import { getUploadedFiles } from './middlewares/upload.js';
 
 const app = express();
 
@@ -50,11 +51,22 @@ app.use((req, res, next) => {
 app.use('/auth', authRouter);
 app.use(uploadRouter);
 
-app.get('/', isAuthenticated, (req, res) => {
-  res.render('home', {
-    title: 'Home',
-    message: res.locals.message || ''
-  });
+app.get('/', isAuthenticated, async (req, res) => {
+  try {
+    const uploads = await getUploadedFiles();
+    res.render('home', {
+      title: 'Home',
+      message: res.locals.message || '',
+      uploads: uploads
+    });
+  } catch (err) {
+    console.error('Error fetching files: ', err);
+    res.render('home', {
+      title: 'Home',
+      message: 'Error loading files',
+      uploads: []
+    });
+  }
 });
 
 const PORT = process.env.PORT || 8080;
