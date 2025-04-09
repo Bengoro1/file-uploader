@@ -13,8 +13,8 @@
     </form>
     <div>
       <% if (uploads.length > 0) { %>
-        <% uploads.forEach(fileName => { %>
-          <%- include('partials/uploadedFile', {fileName: fileName}) %>
+        <% uploads.forEach(uploadedFile => { %>
+          <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name}) %>
         <% }); %>
       <% } %>
     </div>

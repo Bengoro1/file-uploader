@@ -9,7 +9,7 @@ import 'dotenv/config';
 import authRouter from './routes/authRoutes.js';
 import uploadRouter from './routes/uploadRoutes.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
-import { getUploadedFiles } from './middlewares/upload.js';
+import { getUploadedFiles } from './db/uploadQueries.js';
 
 const app = express();
 

@@ -7,9 +7,14 @@ export const uploadFileToPrisma = async (file) => {
 
   await prisma.uploadedFile.create({
     data: {
-      file_name: file.originalname,
+      file_name: file.filename,
       path: file.path,
       size: file.size
     }
   });
+}
+
+export const getUploadedFiles = async () => {
+  const uploadedFiles = await prisma.uploadedFile.findMany();
+  return uploadedFiles;
 }
