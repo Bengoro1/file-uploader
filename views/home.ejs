@@ -4,21 +4,35 @@
 <body>
   <div class="container">
     <%- include('partials/header') %>
-    <% if (locals.message) { %>
-      <p><%= message %></p>
-    <% } %>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" id="file" required>
-      <button type="submit">Submit</button>
-    </form>
-    <div>
-      <% if (uploads.length > 0) { %>
-        <% uploads.forEach(uploadedFile => { %>
-          <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name}) %>
-        <% }); %>
+    <div class="content">
+      <% if (locals.message) { %>
+        <p><%= message %></p>
       <% } %>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Upload file</button>
+      </form>
+      <a href="/folder/create">Create folder</a>
+      <div>
+        <% if (uploads.length > 0) { %>
+          <% uploads.forEach(uploadedFile => { %>
+            <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name, fileId: uploadedFile.id}) %>
+          <% }); %>
+        <% } %>
+        <% if (folders.length > 0) { %>
+          <% folders.forEach(folder => { %>
+            <div>
+              <a href="/folder/<%= folder.id %>"><%= folder.folder_name %></a>
+              <a href="/folder/<%= folder.id %>/edit">Edit folder</a>
+              <form action="/folder/<%= folder.id %>/delete" method="post">
+                <button type="submit">Delete folder</button>
+              </form>
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+      <a href="/auth/log-out">Log out</a>
     </div>
-    <a href="/auth/log-out">Log out</a>
     <%- include('partials/footer') %>
   </div>
 </body>

@@ -10,6 +10,8 @@ import authRouter from './routes/authRoutes.js';
 import uploadRouter from './routes/uploadRoutes.js';
 import { isAuthenticated } from './middlewares/authMiddleware.js';
 import { getUploadedFiles } from './db/uploadQueries.js';
+import folderRouter from './routes/folderRoutes.js';
+import { getAllFolders } from './db/folderQueries.js';
 
 const app = express();
 
@@ -49,25 +51,31 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/auth', authRouter);
-app.use(uploadRouter);
+app.use(isAuthenticated, uploadRouter);
+app.use('/folder', isAuthenticated, folderRouter);
 
 app.get('/', isAuthenticated, async (req, res) => {
   try {
-    const uploads = await getUploadedFiles();
+    const uploads = await getUploadedFiles(req.user.id);
+    const folders = await getAllFolders(req.user.id);
     res.render('home', {
       title: 'Home',
       message: res.locals.message || '',
-      uploads: uploads
+      folders,
+      uploads
     });
   } catch (err) {
-    console.error('Error fetching files: ', err);
+    console.error('Error fetching files and folders: ', err);
     res.render('home', {
       title: 'Home',
-      message: 'Error loading files',
-      uploads: []
+      message: 'Error loading files and folders',
+      uploads: [],
+      folders: []
     });
   }
 });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
+
+// set on cloud platform

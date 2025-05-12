@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+    <div class="content">
+      <% if (locals.message) { %>
+        <p><%= message %></p>
+      <% } %>
+      <form action="/folder/<%= folderId %>/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Submit</button>
+      </form>
+      <div>
+        <a href="/folder/<%= folderId %>/edit">Edit folder</a>
+        <form action="/folder/<%= folderId %>/delete" method="post">
+          <button type="submit">Delete folder</button>
+        </form>
+      </div>
+      <div>
+        <% if (uploads && uploads.length > 0) { %>
+          <% uploads.forEach(uploadedFile => { %>
+            <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name, fileId: uploadedFile.id}) %>
+          <% }); %>
+        <% } %>
+      </div>
+      <a href="/">Back</a>
+      <a href="/auth/log-out">Log out</a>
+    </div>
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

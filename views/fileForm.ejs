@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+    <div class="form-container">
+      <%- include('partials/errors') %>
+
+      <form action="/file/<%= fileId %>/edit" method="post">
+        <div>
+          <label for="fileName">Name: </label>
+          <input type="text" id="fileName" name="fileName" value="<%= fileName %>">
+        </div>
+        <div>
+          <label for="folderId">Folder: </label>
+          <select name="folderId" id="folderId">
+            <option value="null"></option>
+            <% folders.forEach(folder => { %>
+              <option value="<%= folder.id %>" <%= fileFolderId === folder.id ? 'selected' : ''%>><%= folder.folder_name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <button type="submit"><%= title %></button>
+      </form>
+      <a href="/<%= fileFolderId ? `folder/${fileFolderId}` : '' %>">Back</a>
+    </div>
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

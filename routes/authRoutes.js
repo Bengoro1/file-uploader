@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import controller from "../controllers/authController.js";
+import { isAuthenticated } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
@@ -12,6 +13,6 @@ router.post('/log-in', passport.authenticate('local', {
 }));
 router.get('/sign-up', controller.signUp);
 router.post('/sign-up', controller.registerUser);
-router.get('/log-out', controller.logOut);
+router.get('/log-out', isAuthenticated, controller.logOut);
 
 export default router;

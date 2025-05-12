@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import {body, validationResult} from 'express-validator';
-import db from "../db/authQueries.js";
+import {findByUsername, createUser} from "../db/authQueries.js";
 
 const alphaErr = 'must contain only letters.';
 
@@ -22,7 +22,7 @@ const validateRegister = [
     .trim()
     .notEmpty().withMessage('Username is required')
     .custom(async (value) => {
-      const user = await db.findByUsername(value);
+      const user = await findByUsername(value);
       if (user) {
         throw new Error('Username is already in use.');
       }
@@ -49,13 +49,9 @@ const login = (req, res, next) => {
       errors: errorMessage ? [errorMessage] : []
     });
   }
-  try {
-    res.render('login', {
-      title: 'Log in'
-    });
-  } catch(err) {
-    next(err);
-  }
+  res.render('login', {
+    title: 'Log in'
+  });
 };
 
 const signUp = (req, res) => {
@@ -77,7 +73,7 @@ const registerUser = [
     try {
       const {first_name, last_name, email, username, password} = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
-      await db.createUser(first_name, last_name, email, username, hashedPassword);
+      await createUser(first_name, last_name, email, username, hashedPassword);
       res.redirect('/');
     } catch (err) {
       next(err);

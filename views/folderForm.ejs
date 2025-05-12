@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header', {title: title}) %>
+    <div class="form-container">
+      <%- include('partials/errors') %>
+
+      <% if (title === 'Create folder') { %>
+        <form action="/folder/create" method="post">
+      <% } else if (title === 'Edit folder') { %>
+        <form action="/folder/<%= folderId %>/edit" method="post">
+      <% } %>
+          <div>
+            <label for="folderName">Name: </label>     
+            <input type="text" name="folderName" id="folderName" value="<%= typeof folderName !== 'undefined' ? folderName : '' %>">
+          </div>
+          <button type="submit"><%= title %></button>
+        </form>        
+    </div>
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>
