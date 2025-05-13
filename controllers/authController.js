@@ -40,17 +40,14 @@ const validateRegister = [
     }),
 ];
 
-const login = (req, res, next) => {
-  const errorMessage = {msg: req.session.messages?.[0]};
+const login = (req, res) => {
+  const message = req.session.messages?.[0];
+  console.log('error', message);
   req.session.messages = [];
-  if (errorMessage.msg) {
-    return res.render('login', {
-      title: 'Log in',
-      errors: errorMessage ? [errorMessage] : []
-    });
-  }
+
   res.render('login', {
-    title: 'Log in'
+    title: 'Log in',
+    errors: message ? [{msg: message}] : []
   });
 };
 

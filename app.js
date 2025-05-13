@@ -50,6 +50,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 app.use('/auth', authRouter);
 app.use(isAuthenticated, uploadRouter);
 app.use('/folder', isAuthenticated, folderRouter);
@@ -78,4 +79,6 @@ app.get('/', isAuthenticated, async (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
 
-// set on cloud platform
+// add url to file on Prisma
+// test
+// Update your uploadFileToPrisma and uploadFileToPrismaFolder functions to accept the Cloudinary upload result

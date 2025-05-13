@@ -1,6 +1,9 @@
 import { uploadFileToPrisma, findFile, findFileByName, fileDelete, moveFile, renameFile } from "../db/uploadQueries.js";
 import { uploadFileToPrismaFolder, getAllFolders, folderGet } from "../db/folderQueries.js";
 import { body, validationResult } from "express-validator";
+import {streamUpload} from '../utils/cloudinaryUpload.js';
+import {v4 as uuidv4} from 'uuid';
+
 
 const validateFileName = [
   body('fileName')
@@ -28,8 +31,20 @@ export const uploadFile = async (req, res) => {
     if (!req.file) {
       req.session.message = 'No file uploaded!';
     } else {
-      req.params.folderId ? await uploadFileToPrismaFolder(req.file, +req.params.folderId, req.user.id) : await uploadFileToPrisma(req.file, req.user.id);
-      req.session.message = `File uploaded: ${req.file.filename}`;
+      const public_id = uuidv4();
+      const cloudResult = await streamUpload(req.file.buffer, {
+        folder: 'file-uploader',
+        public_id
+      });
+      console.log(cloudResult);
+
+      if (req.params.folderId) {
+        await uploadFileToPrismaFolder(cloudResult, +req.params.folderId, req.user.id);
+      } else {
+        await uploadFileToPrisma(cloudResult, req.user.id);
+      }
+
+      req.session.message = `File uploaded: ${cloudResult.filename}`;
     }
     
     req.session.save(() => {
