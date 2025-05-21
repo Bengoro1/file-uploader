@@ -34,17 +34,18 @@ model User {
 }
 
 model UploadedFile {
-  id        Int      @id @default(autoincrement())
-  file_name String
-  path      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  size      Int
-  folder    Folder?  @relation(fields: [folderId], references: [id])
-  folderId  Int?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  file_url  String
+  id            Int      @id @default(autoincrement())
+  file_name     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  size          Int
+  folder        Folder?  @relation(fields: [folderId], references: [id])
+  folderId      Int?
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  file_url      String
+  public_id     String
+  resource_type String
 
   @@unique([userId, file_name])
 }

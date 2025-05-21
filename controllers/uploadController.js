@@ -3,6 +3,7 @@ import { uploadFileToPrismaFolder, getAllFolders, folderGet } from "../db/folder
 import { body, validationResult } from "express-validator";
 import {streamUpload} from '../utils/cloudinaryUpload.js';
 import {v4 as uuidv4} from 'uuid';
+import path from 'path';
 
 
 const validateFileName = [
@@ -31,20 +32,38 @@ export const uploadFile = async (req, res) => {
     if (!req.file) {
       req.session.message = 'No file uploaded!';
     } else {
-      const public_id = uuidv4();
-      const cloudResult = await streamUpload(req.file.buffer, {
-        folder: 'file-uploader',
-        public_id
-      });
-      console.log(cloudResult);
+      const ext = path.extname(req.file.originalname);
+      const public_id = `${uuidv4()}${ext}`;
+      const original_name = req.file.originalname;
 
-      if (req.params.folderId) {
-        await uploadFileToPrismaFolder(cloudResult, +req.params.folderId, req.user.id);
-      } else {
-        await uploadFileToPrisma(cloudResult, req.user.id);
+      const nameInUse = await findFileByName(req.user.id, original_name);
+      if (nameInUse) {
+        req.session.message = 'File already exists.';
+        req.session.save(() => {
+          return res.redirect(req.params.folderId ? `/folder/${req.params.folderId}` : '/');
+        });
       }
 
-      req.session.message = `File uploaded: ${cloudResult.filename}`;
+      let resource_type = 'raw';
+      if (req.file.mimetype.startsWith('image/')) {
+        resource_type = 'image';
+      } else if (req.file.mimetype.startsWith('video/')) {
+        resource_type = 'video';
+      }
+
+      const cloudResult = await streamUpload(req.file.buffer, {
+        folder: 'file-uploader',
+        public_id,
+        resource_type
+      });
+
+      if (req.params.folderId) {
+        await uploadFileToPrismaFolder(cloudResult, +req.params.folderId, req.user.id, original_name);
+      } else {
+        await uploadFileToPrisma(cloudResult, req.user.id, original_name);
+      }
+
+      req.session.message = `File uploaded: ${original_name}`;
     }
     
     req.session.save(() => {
@@ -122,7 +141,7 @@ export const editFile = [
 
 export const deleteFile = async (req, res, next) => {
   try {
-    await fileDelete(req.user.id, req.params.fileId);
+    await fileDelete(+req.params.fileId);
     return res.redirect('/');
   } catch (err) {
     next(err);

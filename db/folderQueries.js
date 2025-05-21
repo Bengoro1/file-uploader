@@ -11,7 +11,7 @@ export const getAllFolders = async (userId) => {
   return await prisma.folder.findMany({where: {userId}, orderBy: {createdAt: 'asc'}});
 }
 
-export const uploadFileToPrismaFolder = async (file, folderId, userId) => {
+export const uploadFileToPrismaFolder = async (file, folderId, userId, file_name) => {
   if (!file) {
     return new Error('No file provided')
   }
@@ -22,11 +22,13 @@ export const uploadFileToPrismaFolder = async (file, folderId, userId) => {
 
   await prisma.uploadedFile.create({
     data: {
-      file_name: file.filename,
+      file_name,
       path: file.path,
       size: file.size,
       folderId,
-      userId
+      userId,
+      public_id: file.public_id,
+      resource_type: file.resource_type
     }
   });
 

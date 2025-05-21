@@ -16,7 +16,7 @@
       <div>
         <% if (uploads.length > 0) { %>
           <% uploads.forEach(uploadedFile => { %>
-            <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name, fileId: uploadedFile.id}) %>
+            <%- include('partials/uploadedFile', {fileName: uploadedFile.file_name, fileId: uploadedFile.id, fileUrl: uploadedFile.file_url}) %>
           <% }); %>
         <% } %>
         <% if (folders.length > 0) { %>

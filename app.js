@@ -79,6 +79,4 @@ app.get('/', isAuthenticated, async (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
 
-// add url to file on Prisma
-// test
-// Update your uploadFileToPrisma and uploadFileToPrismaFolder functions to accept the Cloudinary upload result
+// update both folders when moving a file
